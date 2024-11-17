@@ -1,53 +1,45 @@
-const express=require('express');
-const app=express();
-const cors=require('cors');
 
-const fs=require('fs');
+
 const path = require('path');
+const express = require('express');
+const app = express();
+require('dotenv').config();
 
-const User=require('./models/user');
-const Expense=require('./models/expense')
+const cors = require("cors");
+const sequelize = require ('./util/database');
 
-const userRouter=require('./routes/user')
-const expenseRouter=require('./routes/expense')
-const sequelize=require('./util/database')
 
-const asscessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),
-{flag:'a'} )
+const Users = require ('./models/user');
+const Expense = require('./models/expense');
+const Order=require('./models/order')
 
-app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "script-src 'self' https://cdn.jsdelivr.net;");
-    next();
-});
+app.use(express.static(path.join(__dirname, 'public')));
+const userRoutes = require('./routes/user');
+const expenseRoutes = require('./routes/expense'); 
+const premiumRoutes = require('./routes/purchase');
+const LeaderBoardRoutes = require('./routes/premium');
 
-app.use(cors());
 app.use(express.json());
-app.use('/user',userRouter)
-app.use('/expense',expenseRouter);
+app.use(cors());
 
-app.use('/', (req, res) => {
-    console.log("url" + req.url);
+app.use('/user', userRoutes);
+app.use('/expenses', expenseRoutes); 
+app.use('/premium', premiumRoutes);
+app.use('/premium', LeaderBoardRoutes);
 
-    // Remove query string from the URL
-    const url = req.url.split('?')[0];
-    console.log(path.join(__dirname, `public${url}`));
+Users.hasMany(Expense, { foreignKey: 'userId' });
+Expense.belongsTo(Users, { foreignKey: 'userId' });
 
-    res.sendFile(path.join(__dirname, `public${url}`));
+
+Users.hasMany(Order,{foreignKey:'userId'});
+Order.belongsTo(Users,{foreignKey:"userId"})
+
+const port = 3000;
+sequelize
+.sync()
+.then((result) => {
+    console.log(`server is working on http://localhost:${port}`);
+   app.listen(port);
+}).catch((err) => {
+    console.log(err)
 });
-
-
-User.hasMany(Expense, { foreignKey: 'userId', onDelete: 'CASCADE' });
-Expense.belongsTo(User, { foreignKey: 'userId' });
-
-
-
-sequelize.sync()    
-.then(r=>{
-    app.listen(process.env.PORT,()=>{
-        console.log("Database is on  And Server is listing on 5000");
-    })
-
-})
-.catch(e=>{
-    
-    console.log(e)})

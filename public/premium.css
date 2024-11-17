@@ -1,0 +1,57 @@
+
+/* General container for the leaderboard */
+.leaderboard-container {
+    position: fixed; /* Fix the position to the top-right */
+    top: 20px; /* Adjust top position */
+    right: 20px; /* Adjust right position */
+    width: 300px; /* Set a fixed width for the leaderboard */
+    max-height: 80%; /* Limit the height to 80% of the screen */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the max height */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+/* Style for the leaderboard table */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 2px solid #ddd; /* Border around the table */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header style */
+.leaderboard-table th {
+    background-color: #fafafa;
+    color: #444;
+    padding: 12px;
+    text-align: left;
+    border: 2px solid #ddd; /* Border for header cells */
+    font-size: 18px;
+}
+
+/* Table row style */
+.leaderboard-table td {
+    padding: 12px;
+    font-size: 16px;
+    color: #333;
+    border: 1px solid #ddd; /* Border for table cells */
+}
+
+/* Zebra striping for rows */
+.leaderboard-table tr:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+/* Highlight row on hover */
+.leaderboard-table tr:hover {
+    background-color: #e0f7fa; /* Light blue background on hover */
+}
+
+/* Border between rows */
+.leaderboard-table tr {
+    border-bottom: 2px solid #ddd;
+}
